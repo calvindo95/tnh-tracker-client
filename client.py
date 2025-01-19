@@ -63,7 +63,7 @@ def send_response():
 if __name__ == "__main__":
     if not os.path.isdir(config.log_dir):
         os.mkdir(config.log_dir)
-    logging.basicConfig(filename=config.log_dir+"client.log", format='%(asctime)s %(levelname)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S', encoding='utf-8', level=logging.INFO)
+    logging.basicConfig(filename=config.log_dir+"client.log", format='%(asctime)s %(levelname)s %(process)d %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
 
     now = datetime.now()
     dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
