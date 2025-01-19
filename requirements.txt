@@ -1,5 +1,7 @@
-adafruit-blinka
-adafruit-circuitpython-sht31d
+adafruit-circuitpython-busdevice==5.1.0
+Adafruit-PlatformDetect==3.16.0
+adafruit-blinka==6.15.0
+adafruit-circuitpython-sht31d==2.3.6
 adafruit-circuitpython-si7021
-Adafruit-PlatformDetect
 requests
+RPi.GPIO
