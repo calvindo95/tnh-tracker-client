@@ -13,7 +13,6 @@ import os
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_sht31d.SHT31D(i2c)
 headers = {'Content-Type': 'application/json'}
-queue_dir = "/home/pi/TnH-Tracker/queue/"
 
 def get_sensor_data():
     try:
@@ -38,9 +37,9 @@ def send_response():
         else:
             logging.info(f'Successfully posted data')
 
-            for json_file in os.listdir(queue_dir):
-                logging.info(f'Attempting to post queue data {queue_dir+json_file}')
-                with open(queue_dir+json_file, "r") as open_json:
+            for json_file in os.listdir(config.queue_dir):
+                logging.info(f'Attempting to post queue data {config.queue_dir+json_file}')
+                with open(config.queue_dir+json_file, "r") as open_json:
                     json_obj = json.load(open_json)
 
                 response = requests.post(config.httpserverip, data=json.dumps(json_obj), headers=headers)
@@ -49,21 +48,23 @@ def send_response():
                     return 1
                 else:
                     logging.info(f'Successfully posted queue data')
-                    os.remove(queue_dir+json_file)
+                    os.remove(config.queue_dir+json_file)
             return 0
         
     except FileNotFoundError as e:
-        os.mkdir(queue_dir)
+        os.mkdir(config.queue_dir)
     except Exception as e:
         filename = str(uuid.uuid4())
-        logging.error(f'Error posting request: {e}, saving to {queue_dir}{filename}.json')
+        logging.error(f'Error posting request: {e}, saving to {config.queue_dir}{filename}.json')
 
-        with open(f"{queue_dir}{filename}.json", "w") as outputjson:
+        with open(f"{config.queue_dir}{filename}.json", "w") as outputjson:
             json.dump(POST_DATA, outputjson)
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='/home/pi/TnH-Tracker/client.log', format='%(asctime)s %(levelname)s %(process)d %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
-    
+    if not os.path.isdir(config.log_dir):
+        os.mkdir(config.log_dir)
+    logging.basicConfig(filename=config.log_dir+"client.log", format='%(asctime)s %(levelname)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S', encoding='utf-8', level=logging.INFO)
+
     now = datetime.now()
     dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
 
