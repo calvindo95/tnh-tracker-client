@@ -1,0 +1,5 @@
+adafruit-blinka
+adafruit-circuitpython-sht31d
+adafruit-circuitpython-si7021
+Adafruit-PlatformDetect
+requests
