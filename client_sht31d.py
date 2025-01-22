@@ -9,7 +9,6 @@ import json
 import logging
 import uuid
 import os
-import faster_than_requests as request
 
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_sht31d.SHT31D(i2c)
@@ -44,8 +43,7 @@ def send_response():
                 with open(config.queue_dir+json_file, "r") as open_json:
                     #json_obj = json.load(open_json)
 
-                    #response = requests.post(config.httpserverip, data=json.dumps(json_obj), headers=headers)
-                    response = request.post(config.httpserverip, body=open_json, http_headers=headers_tuple)
+                    response = requests.post(config.httpserverip, data=open_json, headers=headers)
                     if response.text != "Received data value: 0":
                         logging.warning(f'failed - |{response.text}|')
                         return 1
