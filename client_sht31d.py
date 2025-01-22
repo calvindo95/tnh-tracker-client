@@ -9,10 +9,12 @@ import json
 import logging
 import uuid
 import os
+import faster_than_requests as request
 
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_sht31d.SHT31D(i2c)
 headers = {'Content-Type': 'application/json'}
+headers_tuple = [("Content-Type", "application/json")]
 
 def get_sensor_data():
     try:
@@ -40,15 +42,16 @@ def send_response():
             for json_file in os.listdir(config.queue_dir):
                 logging.info(f'Attempting to post queue data {config.queue_dir+json_file}')
                 with open(config.queue_dir+json_file, "r") as open_json:
-                    json_obj = json.load(open_json)
+                    #json_obj = json.load(open_json)
 
-                response = requests.post(config.httpserverip, data=json.dumps(json_obj), headers=headers)
-                if response.text != "Received data value: 0":
-                    logging.warning(f'failed - |{response.text}|')
-                    return 1
-                else:
-                    logging.info(f'Successfully posted queue data')
-                    os.remove(config.queue_dir+json_file)
+                    #response = requests.post(config.httpserverip, data=json.dumps(json_obj), headers=headers)
+                    response = request.post(config.httpserverip, body=open_json, http_headers=headers_tuple)
+                    if response.text != "Received data value: 0":
+                        logging.warning(f'failed - |{response.text}|')
+                        return 1
+                    else:
+                        logging.info(f'Successfully posted queue data')
+                        os.remove(config.queue_dir+json_file)
             return 0
         
     except FileNotFoundError as e:
@@ -63,7 +66,7 @@ def send_response():
 if __name__ == "__main__":
     if not os.path.isdir(config.log_dir):
         os.mkdir(config.log_dir)
-    logging.basicConfig(filename=config.log_dir+"client.log", format='%(asctime)s %(levelname)s %(process)d %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
+    logging.basicConfig(filename=config.log_dir+"client.log", format='%(asctime)s %(levelname)s %(process)d %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.WARN)
 
     now = datetime.now()
     dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
