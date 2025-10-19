@@ -9,6 +9,7 @@ import json
 import logging
 import uuid
 import os
+from logging.handlers import RotatingFileHandler
 
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_sht31d.SHT31D(i2c)
@@ -64,8 +65,8 @@ def send_response():
 if __name__ == "__main__":
     if not os.path.isdir(config.log_dir):
         os.mkdir(config.log_dir)
-    logging.basicConfig(filename=config.log_dir+"client.log", format='%(asctime)s %(levelname)s %(process)d %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
-
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(process)d %(message)s', datefmt='%Y-%m-%d %H:%M:%S', encoding='utf-8', level=logging.INFO, handlers=[RotatingFileHandler(config.log_dir+"gen.log", maxBytes=1024 * 1024, backupCount=5)])
+    
     now = datetime.now()
     dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
 

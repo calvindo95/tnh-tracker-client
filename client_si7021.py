@@ -8,6 +8,7 @@ import json
 import logging
 import uuid
 import os
+from logging.handlers import RotatingFileHandler
 
 sensor = adafruit_si7021.SI7021(board.I2C())
 headers = {'Content-Type': 'application/json'}
@@ -65,6 +66,7 @@ if __name__ == "__main__":
     if not os.path.isdir(config.log_dir):
         os.mkdir(config.log_dir)
     logging.basicConfig(filename=config.log_dir+"client.log", format='%(asctime)s %(levelname)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S', encoding='utf-8', level=logging.INFO)
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(process)d %(message)s', datefmt='%Y-%m-%d %H:%M:%S', encoding='utf-8', level=logging.INFO, handlers=[RotatingFileHandler(config.log_dir+"gen.log", maxBytes=1024 * 1024, backupCount=5)])
     
     now = datetime.now()
     dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
