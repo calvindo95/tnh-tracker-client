@@ -33,7 +33,7 @@ def send_response():
     try:
         response = requests.post(config.httpserverip, data=json.dumps(POST_DATA), headers=headers)
         
-        if response.text != "Received data value: 0":
+        if response.text != "Received data value: 0\n":
             logging.warning(f'failed - |{response.text}|')
             return 1
         else:
@@ -45,7 +45,7 @@ def send_response():
                     #json_obj = json.load(open_json)
 
                     response = requests.post(config.httpserverip, data=open_json, headers=headers)
-                    if response.text != "Received data value: 0":
+                    if response.text != "Received data value: 0\n":
                         logging.warning(f'failed - |{response.text}|')
                         return 1
                     else:
