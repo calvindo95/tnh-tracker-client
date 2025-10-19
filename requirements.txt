@@ -1,10 +1,9 @@
-adafruit-circuitpython-busdevice==5.1.0
-Adafruit-PlatformDetect==3.16.0
-adafruit-blinka==6.15.0
-adafruit-circuitpython-sht31d==2.3.6
+# sudo apt install nim
+wheel
+adafruit-circuitpython-busdevice
+Adafruit-PlatformDetect
+adafruit-blinka
+adafruit-circuitpython-sht31d
 adafruit-circuitpython-si7021
 requests
 RPi.GPIO
-nimporter 
-choosenim_install
-faster_than_requests
