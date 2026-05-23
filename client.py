@@ -102,7 +102,7 @@ if __name__ == "__main__":
     )
 
     init_sensor()
-    logging.info(f'Using sensor: {sensor_name}')
+    logging.debug(f'Using sensor: {sensor_name}')
 
     now = datetime.now()
     dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
