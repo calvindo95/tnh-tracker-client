@@ -13,6 +13,8 @@ headers = {'Content-Type': 'application/json'}
 sensor = None
 sensor_name = None
 
+log_name = "client.log"
+
 def init_sensor():
     i2c = board.I2C()
     global sensor, sensor_name
@@ -84,12 +86,15 @@ def send_response():
 if __name__ == "__main__":
     if not os.path.isdir(config.log_dir):
         os.mkdir(config.log_dir)
+    handler = RotatingFileHandler(config.log_dir + f"{log_name}", maxBytes=1024 * 1024, backupCount=5)
+    if os.path.getsize(config.log_dir + f"{log_name}") > 1024 * 1024 if os.path.exists(config.log_dir + "gen.log") else False:
+        handler.doRollover()
     logging.basicConfig(
         format='%(asctime)s %(levelname)s %(process)d %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S',
         encoding='utf-8',
         level=logging.INFO,
-        handlers=[RotatingFileHandler(config.log_dir + "gen.log", maxBytes=1024 * 1024, backupCount=5)]
+        handlers=[handler]
     )
 
     init_sensor()
