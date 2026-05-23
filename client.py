@@ -15,7 +15,8 @@ sensor_name = None
 
 def init_sensor():
     i2c = board.I2C()
-
+    global sensor, sensor_name
+    
     try:
         import adafruit_si7021
         sensor = adafruit_si7021.SI7021(i2c)
