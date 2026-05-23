@@ -57,7 +57,11 @@ def send_response():
         else:
             logging.info('Successfully posted data')
 
-            for json_file in (f for f in os.listdir(config.queue_dir) if os.path.getsize(config.queue_dir + f) > 0):
+            for json_file in os.listdir(config.queue_dir):
+                if os.path.getsize(config.queue_dir + json_file) == 0:
+                    logging.warning(f'Removing empty queue file {config.queue_dir + json_file}')
+                    os.remove(config.queue_dir + json_file)
+                    continue
                 logging.info(f'Attempting to post queue data {config.queue_dir + json_file}')
                 with open(config.queue_dir + json_file, "r") as open_json:
                     json_obj = json.load(open_json)
